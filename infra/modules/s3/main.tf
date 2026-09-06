@@ -6,7 +6,7 @@ resource "aws_s3_bucket" "uploads" {
 
   # Explicitly disable object lock to prevent Terraform from querying 
   # object lock configuration, which is blocked by AWS Academy SCPs.
-  object_lock_enabled = false
+ 
 
   # Sandbox environment: by the time you `terraform destroy`, this bucket will
   # contain uploaded event images, deploy.yml release artifacts, and
