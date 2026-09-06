@@ -31,7 +31,7 @@ module "security_groups" {
 module "s3" {
   source      = "../../modules/s3"
   name_prefix = var.name_prefix
-  
+
   # Suffix the account ID with a clean base name to avoid previous SCP blocks
   bucket_name = "assignment-event-uploads-${data.aws_caller_identity.current.account_id}"
 }
