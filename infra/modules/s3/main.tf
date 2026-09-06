@@ -6,7 +6,7 @@ resource "aws_s3_bucket" "uploads" {
 
   # Explicitly disable object lock to prevent Terraform from querying 
   # object lock configuration, which is blocked by AWS Academy SCPs.
- 
+  
 
   # Sandbox environment: by the time you `terraform destroy`, this bucket will
   # contain uploaded event images, deploy.yml release artifacts, and
@@ -34,6 +34,20 @@ resource "aws_s3_bucket_policy" "public_read" {
     Version = "2012-10-17"
     Statement = [
       {
+        Sid       = "AllowAppUploads"
+        Effect    = "Allow"
+        Principal = {
+          AWS = "arn:aws:iam::990519756922:role/LabRole"
+        }
+        Action = [
+          "s3:PutObject",
+          "s3:PutObjectAcl",
+          "s3:GetObject",
+          "s3:DeleteObject"
+        ]
+        Resource = "${aws_s3_bucket.uploads.arn}/*"
+      },
+      {
         Sid       = "PublicReadEventImages"
         Effect    = "Allow"
         Principal = "*"
@@ -51,7 +65,7 @@ resource "aws_s3_bucket_cors_configuration" "uploads" {
 
   cors_rule {
     allowed_headers = ["*"]
-    allowed_methods = ["GET"]
+    allowed_methods = ["GET", "PUT", "POST"]
     allowed_origins = ["*"]
     max_age_seconds = 3000
   }
