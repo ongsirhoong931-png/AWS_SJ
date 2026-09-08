@@ -74,7 +74,7 @@ jobs:
 
       - name: Terraform apply
         if: ${{ inputs.action == 'apply' }}
-        run: terraform plan -refresh=false -out=tfplan && terraform apply -auto-approve tfplan
+        run: terraform plan -refresh=false -out=tfplan && terraform apply -refresh=false -auto-approve tfplan
 
       # Expose the resolved bucket name so deploy.yml (which calls this workflow)
       # can target the right bucket without hardcoding it - Terraform stays the
