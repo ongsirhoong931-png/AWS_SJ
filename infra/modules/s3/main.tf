@@ -4,7 +4,7 @@
 resource "aws_s3_bucket" "uploads" {
   bucket = var.bucket_name
 
-  object_lock_enabled = false
+ 
 
   # Explicitly disable object lock to prevent Terraform from querying 
   # object lock configuration, which is blocked by AWS Academy SCPs.
