@@ -1,3 +1,4 @@
+```bash
 #!/bin/bash
 set -euxo pipefail
 
@@ -20,5 +21,8 @@ if ! command -v aws >/dev/null 2>&1; then
   /tmp/aws/install
 fi
 
+dnf install -y amazon-ssm-agent
+
 systemctl enable amazon-ssm-agent
 systemctl start amazon-ssm-agent
+```
