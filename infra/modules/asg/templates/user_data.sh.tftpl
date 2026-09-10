@@ -12,6 +12,9 @@ dnf install -y \
   unzip \
   mariadb105
 
+  systemctl enable httpd
+systemctl start httpd
+
 if ! command -v aws >/dev/null 2>&1; then
   curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" \
     -o /tmp/awscliv2.zip
