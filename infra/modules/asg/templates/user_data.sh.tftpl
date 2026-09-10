@@ -12,7 +12,7 @@ dnf install -y \
   unzip \
   mariadb105
 
-  systemctl enable httpd
+systemctl enable httpd
 systemctl start httpd
 
 if ! command -v aws >/dev/null 2>&1; then
@@ -28,3 +28,27 @@ dnf install -y \
 
 systemctl enable amazon-ssm-agent
 systemctl start amazon-ssm-agent
+
+# Retrieve database credentials from AWS Secrets Manager
+SECRET_JSON=$(aws secretsmanager get-secret-value \
+  --secret-id assignment-db-credentials \
+  --region us-east-1 \
+  --query SecretString \
+  --output text)
+
+DB_HOST=$(echo "$SECRET_JSON" | jq -r '.host')
+DB_USER=$(echo "$SECRET_JSON" | jq -r '.username')
+DB_PASS=$(echo "$SECRET_JSON" | jq -r '.password')
+DB_NAME=$(echo "$SECRET_JSON" | jq -r '.dbname')
+
+# Create Apache environment configuration
+cat > /etc/httpd/conf.d/assignment-env.conf <<EOF
+SetEnv DB_HOST "$DB_HOST"
+SetEnv DB_USER "$DB_USER"
+SetEnv DB_PASS "$DB_PASS"
+SetEnv DB_NAME "$DB_NAME"
+EOF
+
+# Restart Apache so the database environment variables take effect
+systemctl restart httpd
+
